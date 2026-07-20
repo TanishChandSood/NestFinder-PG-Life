@@ -37,16 +37,15 @@ app.post("/ask-ai", async (req, res) => {
     });
 
     const page = await browser.newPage();
-
     await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 
     await page.goto("https://chatgpt.com", {
-      waitUntil: "networkidle2",
-      timeout: 60000,
+      waitUntil: "domcontentloaded",
+      timeout: 90000,
     });
 
     const inputSelector = "#prompt-textarea";
-    await page.waitForSelector(inputSelector, { timeout: 15000 });
+    await page.waitForSelector(inputSelector, { timeout: 30000 });
     await page.click(inputSelector);
 
     await page.type(inputSelector, question);
@@ -55,9 +54,9 @@ app.post("/ask-ai", async (req, res) => {
     console.log("⏳ ChatGPT is generating response...");
 
     const responseSelector = '[data-message-author-role="assistant"]';
-    await page.waitForSelector(responseSelector, { timeout: 30000 });
+    await page.waitForSelector(responseSelector, { timeout: 60000 });
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 6000));
 
     const replyText = await page.evaluate((selector) => {
       const elements = document.querySelectorAll(selector);
@@ -74,7 +73,7 @@ app.post("/ask-ai", async (req, res) => {
     console.error("❌ Error during AI processing:", error);
     if (browser) await browser.close();
     res.status(500).json({
-      reply: "Sorry, back-end automation script failed to fetch data.",
+      reply: "AI server is taking too long to respond. Please try again!",
     });
   }
 });
