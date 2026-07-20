@@ -1,3 +1,4 @@
+process.env.PUPPETEER_CACHE_DIR = '/opt/render/project/src/.cache';
 import express from "express";
 import puppeteer from "puppeteer";
 import cors from "cors";
