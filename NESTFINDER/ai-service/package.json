@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "build": "node node_modules/puppeteer/install.mjs"   
+    "build": "PUPPETEER_CACHE_DIR=/opt/render/project/src/.cache puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
