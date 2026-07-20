@@ -13,7 +13,7 @@ NestFinder PG-Life is a robust, full-stack PG portal designed to streamline the 
 
 ## 🛠️ Tech Stack
 
-*   **Frontend:** React.js
+*   **Frontend:** HTML5, CSS3, Bootstrap (for core pages) & **React.js** (for dynamic components)
 *   **Backend:** PHP
 *   **Database:** MySQL
 
