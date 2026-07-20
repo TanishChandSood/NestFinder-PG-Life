@@ -1,24 +1,44 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.post("/ask-ai", async (req, res) => {
-  const { question } = req.body;
+  const { msg } = req.body;
+  const question = msg; 
+  
+  if (!question) {
+    return res.status(400).json({ reply: "No message provided by user." });
+  }
+
   console.log(`🤖 User Asked: ${question}`);
 
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: false,
-      defaultViewport: null,
-      args: ["--start-maximized"],
+      headless: "new",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
+      ],
     });
 
     const page = await browser.newPage();
+
+    await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 
     await page.goto("https://chatgpt.com", {
       waitUntil: "networkidle2",
@@ -37,36 +57,28 @@ app.post("/ask-ai", async (req, res) => {
     const responseSelector = '[data-message-author-role="assistant"]';
     await page.waitForSelector(responseSelector, { timeout: 30000 });
 
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const replyText = await page.evaluate((selector) => {
       const elements = document.querySelectorAll(selector);
-
       const lastMessage = elements[elements.length - 1];
-      return lastMessage
-        ? lastMessage.innerText
-        : "Sorry, I couldn't fetch the text.";
+      return lastMessage ? lastMessage.innerText : "Sorry, I couldn't fetch the text.";
     }, responseSelector);
 
     console.log(`✅ AI Response Fetched!`);
 
     await browser.close();
-
     res.json({ reply: replyText });
+
   } catch (error) {
     console.error("❌ Error during AI processing:", error);
     if (browser) await browser.close();
-    res
-      .status(500)
-      .json({
-        reply: "Sorry, back-end automation script failed to fetch data.",
-      });
+    res.status(500).json({
+      reply: "Sorry, back-end automation script failed to fetch data.",
+    });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(
-    `🚀 AI Bridge Microservice is running on http://localhost:${PORT}`,
-  );
-  console.log(`💡 Node.js aur PHP ab ready hain connection ke liye!`);
+  console.log(`🚀 AI Bridge Microservice is running on port ${PORT}`);
 });
