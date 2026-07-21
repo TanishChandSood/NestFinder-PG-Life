@@ -14,7 +14,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6LFBDqbvsQbQNeZX-YOyLKyI-d4zEsgb6gK3wqtyVFo5w" });
+const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6LBqSBBvHfT2EsxtfofoLnFkejk6VlIpWwaUNLTxgeMZA" });
 
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
@@ -28,7 +28,7 @@ app.post("/ask-ai", async (req, res) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-flash-latest',
       contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
     });
 
