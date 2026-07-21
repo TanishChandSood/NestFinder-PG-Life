@@ -14,7 +14,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6JAUZKMbTqvjqHkkgmDngwS5SVpy1IHSaueVmyFXNBqkw" });
+const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6LFBDqbvsQbQNeZX-YOyLKyI-d4zEsgb6gK3wqtyVFo5w" });
 
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
