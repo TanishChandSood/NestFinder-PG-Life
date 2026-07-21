@@ -1,7 +1,6 @@
-process.env.PUPPETEER_CACHE_DIR = '/opt/render/project/src/.cache';
 import express from "express";
-import puppeteer from "puppeteer";
 import cors from "cors";
+import { GoogleGenAI } from "@google/genai";
 
 const app = express();
 
@@ -13,7 +12,9 @@ app.use(cors({
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
@@ -25,56 +26,20 @@ app.post("/ask-ai", async (req, res) => {
 
   console.log(`🤖 User Asked: ${question}`);
 
-  let browser;
   try {
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ],
+    const response = await ai.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
     });
 
-    const page = await browser.newPage();
-    await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-
-    await page.goto("https://chatgpt.com", {
-      waitUntil: "domcontentloaded",
-      timeout: 90000,
-    });
-
-    const inputSelector = "#prompt-textarea";
-    await page.waitForSelector(inputSelector, { timeout: 30000 });
-    await page.click(inputSelector);
-
-    await page.type(inputSelector, question);
-    await page.keyboard.press("Enter");
-
-    console.log("⏳ ChatGPT is generating response...");
-
-    const responseSelector = '[data-message-author-role="assistant"]';
-    await page.waitForSelector(responseSelector, { timeout: 60000 });
-
-    await new Promise((resolve) => setTimeout(resolve, 6000));
-
-    const replyText = await page.evaluate((selector) => {
-      const elements = document.querySelectorAll(selector);
-      const lastMessage = elements[elements.length - 1];
-      return lastMessage ? lastMessage.innerText : "Sorry, I couldn't fetch the text.";
-    }, responseSelector);
-
+    const replyText = response.text;
     console.log(`✅ AI Response Fetched!`);
-
-    await browser.close();
     res.json({ reply: replyText });
 
   } catch (error) {
     console.error("❌ Error during AI processing:", error);
-    if (browser) await browser.close();
     res.status(500).json({
-      reply: "AI server is taking too long to respond. Please try again!",
+      reply: "AI server is having trouble connecting. Please try again!",
     });
   }
 });
