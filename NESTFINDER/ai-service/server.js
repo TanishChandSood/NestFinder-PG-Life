@@ -11,10 +11,8 @@ app.post("/ask-ai", async (req, res) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
 
-    // 🔴 Step A: Check if API Key exists
     if (!apiKey) {
-      console.error("CRITICAL ERROR: GEMINI_API_KEY environment variable is missing!");
-      return res.status(200).json({ reply: "⚠️ API Key not configured on Vercel backend." });
+      return res.status(200).json({ reply: "⚠️ API Key configured nahi hai!" });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -24,49 +22,39 @@ app.post("/ask-ai", async (req, res) => {
       return res.status(200).json({ reply: "Kuch toh puchiye!" });
     }
 
-    const candidateModels = [
-      "gemini-1.5-flash",
-      "gemini-2.0-flash",
-      "gemini-1.5-pro",
-      "models/gemini-2.5-flash"
-    ];
-
-    let lastError = null;
-
-    for (const modelName of candidateModels) {
-      try {
-        const model = genAI.getGenerativeModel({
-          model: modelName,
-          generationConfig: { maxOutputTokens: 150, temperature: 0.3 }
-        });
-
-        const systemPrompt = `You are NestFinder's AI Assistant. Answer in maximum 2 short lines in Hinglish.`;
-        const result = await model.generateContent([systemPrompt, userMsg]);
-        const response = await result.response;
-        const aiText = response.text();
-
-        if (aiText) {
-          console.log(`SUCCESS with model: ${modelName}`);
-          return res.status(200).json({ reply: aiText });
-        }
-      } catch (err) {
-        lastError = err.message;
-        // 🔍 Is line se Vercel log me exact problem pta chalegi:
-        console.error(`FAILED [${modelName}]:`, err.message);
+    // 🎯 VERIFIED WORKING MODEL
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash",
+      generationConfig: {
+        maxOutputTokens: 120,
+        temperature: 0.3
       }
-    }
-
-    // Return the actual error message to chat window for instant fixing
-    return res.status(200).json({ 
-      reply: `⚠️ API Error: ${lastError || "All models failed"}` 
     });
 
-  } catch (globalError) {
-    console.error("Global Error:", globalError);
-    return res.status(200).json({ reply: `⚠️ Server Error: ${globalError.message}` });
+    const systemPrompt = `You are NestFinder's AI Assistant. Answer in maximum 2 short lines in Hinglish. Be concise and helpful.`;
+
+    const result = await model.generateContent([systemPrompt, userMsg]);
+    const response = await result.response;
+    const aiText = response.text();
+
+    return res.status(200).json({ reply: aiText });
+
+  } catch (error) {
+    console.error("Gemini Error:", error.message);
+
+    // Rate Limit (429) Handling
+    if (error.message.includes("429") || error.message.includes("quota")) {
+      return res.status(200).json({ 
+        reply: "⏳ AI abhi thoda busy hai (Rate Limit). 10-15 seconds baad try karein ya direct PG search karein!" 
+      });
+    }
+
+    return res.status(200).json({ 
+      reply: "🤖 Abhi connectivity issue hai, kripya thodi der baad try karein!" 
+    });
   }
 });
 
-app.get("/", (req, res) => res.send("NestFinder AI Service Live!"));
+app.get("/", (req, res) => res.send("NestFinder AI Backend Live!"));
 
 export default app;
