@@ -42,7 +42,7 @@ app.post("/ask-ai", async (req, res) => {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash', 
+      model: 'models/gemini-1.5-flash', 
       contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
     });
 
