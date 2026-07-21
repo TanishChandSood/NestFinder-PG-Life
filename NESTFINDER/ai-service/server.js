@@ -7,66 +7,66 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 app.post("/ask-ai", async (req, res) => {
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    // 🔴 Step A: Check if API Key exists
+    if (!apiKey) {
+      console.error("CRITICAL ERROR: GEMINI_API_KEY environment variable is missing!");
+      return res.status(200).json({ reply: "⚠️ API Key not configured on Vercel backend." });
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
     const userMsg = req.body.msg || req.body.question;
 
     if (!userMsg) {
       return res.status(200).json({ reply: "Kuch toh puchiye!" });
     }
 
-    // 🎯 Active & Production-Ready Models (Tested & Working)
-    const workingModels = [
+    const candidateModels = [
       "gemini-1.5-flash",
       "gemini-2.0-flash",
-      "gemini-1.5-pro"
+      "gemini-1.5-pro",
+      "models/gemini-2.5-flash"
     ];
 
-    let aiText = null;
+    let lastError = null;
 
-    // Loop through working models if one fails
-    for (const modelName of workingModels) {
+    for (const modelName of candidateModels) {
       try {
         const model = genAI.getGenerativeModel({
           model: modelName,
-          generationConfig: {
-            maxOutputTokens: 150,
-            temperature: 0.3
-          }
+          generationConfig: { maxOutputTokens: 150, temperature: 0.3 }
         });
 
-        const systemPrompt = `You are NestFinder's AI Assistant. Answer in maximum 2 short lines in Hinglish. Be concise, helpful and friendly.`;
-
+        const systemPrompt = `You are NestFinder's AI Assistant. Answer in maximum 2 short lines in Hinglish.`;
         const result = await model.generateContent([systemPrompt, userMsg]);
         const response = await result.response;
-        aiText = response.text();
+        const aiText = response.text();
 
-        if (aiText) break; // Valid output milte hi loop break ho jayega
+        if (aiText) {
+          console.log(`SUCCESS with model: ${modelName}`);
+          return res.status(200).json({ reply: aiText });
+        }
       } catch (err) {
-        console.warn(`Model ${modelName} failed, trying next...`);
+        lastError = err.message;
+        // 🔍 Is line se Vercel log me exact problem pta chalegi:
+        console.error(`FAILED [${modelName}]:`, err.message);
       }
     }
 
-    if (aiText) {
-      return res.status(200).json({ reply: aiText });
-    } else {
-      return res.status(200).json({ 
-        reply: "🤖 Abhi AI server busy hai. Aap direct city name ya budget type karke PGs search kar sakte hain!" 
-      });
-    }
+    // Return the actual error message to chat window for instant fixing
+    return res.status(200).json({ 
+      reply: `⚠️ API Error: ${lastError || "All models failed"}` 
+    });
 
   } catch (globalError) {
     console.error("Global Error:", globalError);
-    return res.status(200).json({ 
-      reply: "🤖 Connectivity issue. Kripya thodi der baad try karein!" 
-    });
+    return res.status(200).json({ reply: `⚠️ Server Error: ${globalError.message}` });
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("NestFinder AI Service Live!");
-});
+app.get("/", (req, res) => res.send("NestFinder AI Service Live!"));
 
 export default app;
