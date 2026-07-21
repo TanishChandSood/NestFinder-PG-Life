@@ -17,47 +17,43 @@ const PORT = process.env.PORT || 10000;
 
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
-  const question = msg; 
   
-  if (!question) {
-    return res.status(400).json({ reply: "No message provided by user." });
+  if (!msg) {
+    return res.status(400).json({ reply: "No message provided." });
   }
 
-  // 👇 --- VERCEL KEY DEBUGGING START --- 👇
-  console.log("--- VERCEL KEY DEBUGGING ---");
-  console.log("Key Status:", process.env.GEMINI_API_KEY ? "Load ho gayi! ✅" : "Missing (Undefined) ❌");
-
-  if (process.env.GEMINI_API_KEY) {
-      // Key leak na ho isliye sirf starting aur length check kar rahe hain
-      console.log("Shuru ke 5 characters:", process.env.GEMINI_API_KEY.substring(0, 5));
-      console.log("Total length:", process.env.GEMINI_API_KEY.length);
-  }
-  console.log("----------------------------");
-  // 👆 --- VERCEL KEY DEBUGGING END --- 👆
-
-  console.log(`🤖 User Asked: ${question}`);
+  console.log(`🤖 Received message: ${msg}`);
 
   try {
-    // SDK ko sahi tarike se object pass karke initialize kar rahe hain
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+    const systemPrompt = `
+      Aap 'NestFinder (PG-Life)' website ke ek smart aur helpful assistant ho.
+      Aapka kaam users ko guide karna aur friendly baatcheet karna hai.
+
+      🚨 STRICT FORMATTING RULES:
+      1. Do NOT use any Markdown formatting like '###', '**', or '*'.
+      2. Keep the text completely plain, clean, and readable.
+      3. Use emojis to make it lively and talk in a friendly Hinglish tone.
+
+      User ka message hai: ${msg}
+    `;
+
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash', // <-- Yahan purana model hata kar latest 2.5 flash set kar diya hai
-      contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
+      model: 'gemini-2.5-flash',
+      contents: systemPrompt,
     });
 
-    const replyText = response.text;
-    console.log(`✅ AI Response Fetched!`);
+    const replyText = response.text || "Mujhe samajh nahi aaya, thoda aur clearly batao!";
     res.json({ reply: replyText });
 
   } catch (error) {
-    console.error("❌ Error during AI processing:", error);
-    res.status(500).json({
-      reply: "AI server is having trouble connecting. Please try again!",
+    console.error("❌ AI Error:", error);
+    res.status(500).json({ 
+      reply: "Sorry, mera AI server abhi thoda busy hai. Thodi der baad try karo!" 
     });
   }
 });
-
 app.listen(PORT, () => {
   console.log(`🚀 AI Bridge Microservice is running on port ${PORT}`);
 });
