@@ -4,7 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const app = express();
 
-// CORS Middleware configuratio
+// CORS Middleware configuration
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
@@ -22,6 +22,18 @@ app.post("/ask-ai", async (req, res) => {
   if (!question) {
     return res.status(400).json({ reply: "No message provided by user." });
   }
+
+  // 👇 --- VERCEL KEY DEBUGGING START --- 👇
+  console.log("--- VERCEL KEY DEBUGGING ---");
+  console.log("Key Status:", process.env.GEMINI_API_KEY ? "Load ho gayi! ✅" : "Missing (Undefined) ❌");
+
+  if (process.env.GEMINI_API_KEY) {
+      // Key leak na ho isliye sirf starting aur length check kar rahe hain
+      console.log("Shuru ke 5 characters:", process.env.GEMINI_API_KEY.substring(0, 5));
+      console.log("Total length:", process.env.GEMINI_API_KEY.length);
+  }
+  console.log("----------------------------");
+  // 👆 --- VERCEL KEY DEBUGGING END --- 👆
 
   console.log(`🤖 User Asked: ${question}`);
 
