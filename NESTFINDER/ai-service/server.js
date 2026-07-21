@@ -17,7 +17,7 @@ app.post("/ask-ai", async (req, res) => {
       return res.status(400).json({ reply: "Pardon? Message missing." });
     }
 
-    // System prompt forces short, crisp & friendly responses
+    // System prompt forces short, crisp & friendly response
     const systemPrompt = `You are an AI assistant for "NestFinder / PG Life" portal. 
 Answer user general queries concisely in 2-3 short bullet points or lines. 
 Keep tone friendly, helpful, and use Hinglish/English. 
