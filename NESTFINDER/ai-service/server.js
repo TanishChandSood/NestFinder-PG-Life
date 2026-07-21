@@ -4,6 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const app = express();
 
+// CORS Middleware configuration
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
@@ -14,9 +15,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-// Naye SDK mein agar variable ka naam GEMINI_API_KEY hai, toh ye automatically utha leta hai
-const ai = new GoogleGenAI(); 
-
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
   const question = msg; 
@@ -25,13 +23,14 @@ app.post("/ask-ai", async (req, res) => {
     return res.status(400).json({ reply: "No message provided by user." });
   }
 
-  // Debugging ke liye check ki variable mil raha hai ya nahi
-  console.log("🔑 Env Key Check:", process.env.GEMINI_API_KEY ? "Key Loaded Successfully ✅" : "Key is UNDEFINED ❌");
   console.log(`🤖 User Asked: ${question}`);
 
   try {
+    // SDK ko sahi tarike se object pass karke initialize kar rahe hain
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash', // Naye SDK ke liye standard aur stable model name
+      model: 'gemini-1.5-flash', 
       contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
     });
 
