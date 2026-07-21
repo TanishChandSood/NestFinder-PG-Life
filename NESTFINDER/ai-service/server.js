@@ -14,9 +14,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY 
-});
+// Naye SDK mein agar variable ka naam GEMINI_API_KEY hai, toh ye automatically utha leta hai
+const ai = new GoogleGenAI(); 
 
 app.post("/ask-ai", async (req, res) => {
   const { msg } = req.body;
@@ -26,11 +25,13 @@ app.post("/ask-ai", async (req, res) => {
     return res.status(400).json({ reply: "No message provided by user." });
   }
 
+  // Debugging ke liye check ki variable mil raha hai ya nahi
+  console.log("🔑 Env Key Check:", process.env.GEMINI_API_KEY ? "Key Loaded Successfully ✅" : "Key is UNDEFINED ❌");
   console.log(`🤖 User Asked: ${question}`);
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-latest',
+      model: 'gemini-1.5-flash', // Naye SDK ke liye standard aur stable model name
       contents: `Aap NestFinder (PG-Life) website ke ek smart assistant ho. Users ko PG dhoondhne, facilities, aur budget ke baare mein guide karo. User ka sawal hai: ${question}`,
     });
 
