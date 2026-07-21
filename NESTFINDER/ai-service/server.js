@@ -23,7 +23,7 @@ Answer user general queries concisely in 2-3 short bullet points or lines.
 Keep tone friendly, helpful, and use Hinglish/English. 
 Do NOT write long essays or large paragraphs.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
     const result = await model.generateContent([systemPrompt, userMsg]);
     const response = await result.response;
     const aiText = response.text();
