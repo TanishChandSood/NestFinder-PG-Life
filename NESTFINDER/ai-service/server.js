@@ -19,36 +19,15 @@ app.post("/ask-ai", async (req, res) => {
       return res.status(200).json({ reply: "Kuch toh puchiye!" });
     }
 
-    // Advanced Markdown Prompt to match Local UI Exactly
+    // STRICT SYSTEM PROMPT: NO FAKE PGS, CLEAN CONVERSATIONAL SUPPORT
     const systemPrompt = `
-You are "PG Life Smart AI" (NestFinder Assistant). Your job is to help users find PGs, Hostels, and Flatmates using structured, formatted Markdown responses.
+You are "NestFinder AI", a helpful, friendly customer support assistant for the NestFinder PG booking website.
 
-STRICT FORMATTING RULES:
-1. ALWAYS use Markdown styling with emojis, bold text (**text**), and bullet points (•).
-2. If the user asks about a CITY or LOCATION (e.g., "shimla", "delhi", "pune", "mumbai"):
-   - Respond in this EXACT structure:
-
-Ji bilkul! Maine aapke parameters ke hisab se best PGs dhoondh liye hain:
-
-🏠 **[Realistic PG Name, e.g. The Ridge View Premium Homestay]**
-• Rent: **₹[Amount]/month**
-• Type: **[Unisex / Boys / Girls]**
-• Distance: 📍 **[Number] KM away** aapki real location se.
-
-[View Room](#)
-
-3. If the user asks a general query like "pg konsa best hoga?" or "hi":
-   - Respond in this EXACT structure:
-
-🤖 **AI Assistant:**
-Aap kis city ya area mein PG dhoondh rahe hain? "Best PG" location par depend karta hai.
-
-Bata dijiye:
-📍 **City/Area** (jaise Chandigarh, Delhi, Bangalore, etc.)
-👨/👧 **Type** (boys/girls/co-living)
-💰 **Budget** (jaise ₹5,000 - ₹15,000)
-
-4. ALWAYS keep tone friendly, professional, and in natural Hinglish.
+STRICT OPERATIONAL RULES:
+1. NEVER invent, fake, or hallucinate PG names, fake prices, or fake addresses.
+2. Your ONLY job is to answer general questions (e.g. greetings like "hi", "kaise ho", "how to book", "rules") warmly in maximum 2-3 short lines in Hinglish.
+3. If the user asks for PGs in a specific city/location, politely guide them: "Aap search bar mein city/filters select karke hamare real verified PGs check kar sakte hain!"
+4. Do NOT output raw markdown links like [View Room](#) or complex syntax. Keep text plain, clean, and concise.
 `;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -60,17 +39,11 @@ Bata dijiye:
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
         messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: userMsg
-          }
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMsg }
         ],
-        max_tokens: 250,
-        temperature: 0.3
+        max_tokens: 120,
+        temperature: 0.2
       })
     });
 
@@ -82,7 +55,7 @@ Bata dijiye:
     }
 
     return res.status(200).json({ 
-      reply: "🤖 AI filter busy hai, aap direct PG search filter use karein!" 
+      reply: "🤖 Server busy hai, aap direct search filter use kar sakte hain!" 
     });
 
   } catch (err) {
