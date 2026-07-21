@@ -5,8 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "build": "PUPPETEER_CACHE_DIR=/opt/render/project/src/.cache npx puppeteer browsers install chrome"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +13,6 @@
   "dependencies": {
     "@google/genai": "^2.12.0",
     "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "puppeteer": "^25.3.0"
+    "express": "^5.2.1"
   }
 }
