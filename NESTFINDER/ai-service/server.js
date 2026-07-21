@@ -14,31 +14,36 @@ app.post("/ask-ai", async (req, res) => {
     const userMsg = req.body.msg || req.body.question;
 
     if (!userMsg) {
-      return res.status(400).json({ reply: "Pardon? Message missing." });
+      return res.status(400).json({ reply: "Kuch toh puchiye!" });
     }
 
-    // System prompt forces short, crisp & friendly response
-    const systemPrompt = `You are an AI assistant for "NestFinder / PG Life" portal. 
-Answer user general queries concisely in 2-3 short bullet points or lines. 
-Keep tone friendly, helpful, and use Hinglish/English. 
-Do NOT write long essays or large paragraphs.`;
+    // ⚡ Fast Response Configuration
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3.5-flash",
+      generationConfig: {
+        maxOutputTokens: 120, // Strict limit -> Ultra Fast Response!
+        temperature: 0.3      // Direct & Precise answers
+      }
+    });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+    const systemPrompt = `You are NestFinder's AI Assistant. 
+Answer the user's query in maximum 2 short lines or 2 bullet points in Hinglish. 
+Be concise, helpful, and friendly. Do not generate long text.`;
+
     const result = await model.generateContent([systemPrompt, userMsg]);
     const response = await result.response;
-    const aiText = response.text();
-
-    return res.status(200).json({ reply: aiText });
+    
+    return res.status(200).json({ reply: response.text() });
   } catch (error) {
     console.error("Gemini API Error:", error);
     return res.status(500).json({ 
-      reply: "Sorry, mera AI server abhi response nahi de pa raha hai." 
+      reply: "Sorry, AI Server busy hai. Kripya thodi der baad try karein!" 
     });
   }
 });
 
 app.get("/", (req, res) => {
-  res.send("NestFinder AI Vercel Microservice is Running!");
+  res.send("NestFinder AI Service Live!");
 });
 
 export default app;
