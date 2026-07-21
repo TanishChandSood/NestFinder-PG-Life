@@ -19,7 +19,7 @@ app.post("/ask-ai", async (req, res) => {
 
     // ⚡ Fast Response Configuration
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       generationConfig: {
         maxOutputTokens: 120, // Strict limit -> Ultra Fast Response!
         temperature: 0.3      // Direct & Precise answers
