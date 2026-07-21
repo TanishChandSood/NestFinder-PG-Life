@@ -53,7 +53,7 @@ while ($cityRow = mysqli_fetch_assoc($cityResult)) {
 
 
 if (!$is_pg_search) {
-    $ai_server_url = "http://localhost:3000/ask-ai";
+    $ai_server_url = "https://nest-finder-pg-life.vercel.app/ask-ai";
     $post_data = json_encode(array("question" => $userMsg));
 
     $ch = curl_init($ai_server_url);
