@@ -4,7 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const app = express();
 
-// CORS Middleware configuration
+// CORS Middleware configuratio
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
