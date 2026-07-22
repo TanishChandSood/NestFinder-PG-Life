@@ -38,6 +38,8 @@ STRICT FORMATTING & EMOJI RULES:
 4. GENERAL QUESTIONS (e.g., study tips, health, food, career, life advice):
    - Answer directly, comprehensively, and enthusiastically with great Markdown formatting.
    - DO NOT mention PGs, hostels, or accommodation unless explicitly asked.
+   - Provide high-value, detailed advice (2 sentences per point).
+   - ALWAYS include a '💡 Pro Tip:' section at the end of the answer.
 
 5. PROPERTY / PG QUESTIONS:
    - Help the user find suitable options on NestFinder.`;
