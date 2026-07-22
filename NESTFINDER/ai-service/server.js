@@ -20,16 +20,17 @@ STRICT FORMATTING & EMOJI RULES:
    - ALWAYS use rich emojis throughout your response (e.g., 👋, 📚, 🎯, 💡, 🥗, 🏋️‍♂️, ✨, 🚀, 📌, 🔑).
    - Place relevant emojis at the start of every heading, bullet point, and important tip.
 
-2. GENERAL QUESTIONS (e.g., study tips, health, food, career, life advice):
+2. LANGUAGE & TONE (CRITICAL RULE):
+   - DETECT USER LANGUAGE AND REPLY IN THE SAME LANGUAGE.
+   - If the user asks in ENGLISH (e.g., "glowing skin tips please"), reply strictly in clean ENGLISH.
+   - If the user asks in HINGLISH/HINDI (e.g., "padhai kaise kare"), reply in natural HINGLISH.
+
+3. GENERAL QUESTIONS (e.g., study tips, health, food, career, life advice):
    - Answer directly, comprehensively, and enthusiastically with great Markdown formatting.
    - DO NOT mention PGs, hostels, or accommodation unless explicitly asked.
 
-3. PROPERTY / PG QUESTIONS:
-   - Help the user find suitable options on NestFinder.
-
-4. LANGUAGE & TONE:
-   - Respond in friendly, warm Hinglish / English.
-   - Use bold text for key terms and clean bullet points.`;
+4. PROPERTY / PG QUESTIONS:
+   - Help the user find suitable options on NestFinder.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -42,23 +43,23 @@ STRICT FORMATTING & EMOJI RULES:
         messages: [
           { role: "system", content: systemPrompt },
           
-          // 🎯 FEW-SHOT EXAMPLES (Enforces strict Emoji & General Knowledge boundary)
+          // 🎯 FEW-SHOT EXAMPLES (Enforces Strict Language Mirroring & Formatting)
           { role: "user", content: "Padhai kaise karein?" },
           {
             role: "assistant",
             content: `📚 **Effective Padhai Karne Ke Smart Tips:**\n\n1. 🎯 **Pomodoro Technique Try Karein:** 25 minute focus se padhein aur 5 minute break lein.\n2. 📱 **Distractions Se Door Rahein:** Padhate waqt mobile silent rakhein.\n3. 📝 **Notes Banayein:** Key points ko apni bhasha me likhein.\n4. 🔄 **Regular Revision:** Har hafte padha hua revise karein.`
           },
-          { role: "user", content: "Sehat ke liye kya khana chahiye?" },
+          { role: "user", content: "glowing skin tips please" },
           {
             role: "assistant",
-            content: `🥗 **Healthy Diet & Nutrition Tips:**\n\n1. 🥦 **Hari Sabziyan & Fruits:** Apne khane me daily taaza phal aur sabziyan shamil karein.\n2. 💧 **Paani Khoob Piyein:** Din me 3-4 litre paani piyein.\n3. 🏋️‍♂️ **Protein Rich Food:** Daal, anda, paneer intake badhayein.`
+            content: `✨ **Essential Tips for Glowing Skin:**\n\n1. 🧴 **Apply Sunscreen Daily:** Use a broad-spectrum SPF 30 sunscreen every morning.\n2. 💧 **Stay Hydrated:** Drink at least 3-4 liters of water daily.\n3. 🧼 **Gentle Cleansing:** Wash your face twice a day with a mild cleanser and moisturize.\n4. 🥗 **Healthy Diet:** Include fresh fruits and green vegetables in your diet.`
           },
           
           // Real user query:
           { role: "user", content: userMsg }
         ],
-        max_tokens: 800, // 🚀 Fixed token limit (was 100)
-        temperature: 0.7 // 🚀 Fixed creative temperature (was 0.2)
+        max_tokens: 800,
+        temperature: 0.7
       })
     });
 
