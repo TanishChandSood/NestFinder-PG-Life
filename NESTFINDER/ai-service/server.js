@@ -19,12 +19,6 @@ STRICT FORMATTING & EMOJI RULES:
 1. MANDATORY DOUBLE NEWLINES FOR LISTS (CRITICAL):
    - ALWAYS put double line breaks (\\n\\n) before every heading, numbered list (1., 2., 3.), and bullet point.
    - NEVER combine multiple numbered points into a single continuous paragraph.
-   - Example Structure:
-     📚 **Heading Title**
-
-     1. 🎯 **Point One:** Description here.
-
-     2. 📱 **Point Two:** Description here.
 
 2. EMOJIS ARE MANDATORY:
    - ALWAYS use rich emojis throughout your response (e.g., 👋, 📚, 🎯, 💡, 🥗, 🏋️‍♂️, ✨, 🚀, 📌, 🔑).
@@ -35,11 +29,11 @@ STRICT FORMATTING & EMOJI RULES:
    - If the user asks in ENGLISH (e.g., "glowing skin tips please"), reply strictly in clean ENGLISH.
    - If the user asks in HINGLISH/HINDI (e.g., "padhai kaise kare"), reply in natural HINGLISH.
 
-4. GENERAL QUESTIONS (e.g., study tips, health, food, career, life advice):
+4. GENERAL QUESTIONS (e.g., study tips, health, food, career, life advice, travel):
    - Answer directly, comprehensively, and enthusiastically with great Markdown formatting.
    - DO NOT mention PGs, hostels, or accommodation unless explicitly asked.
-   - Provide high-value, detailed advice (2 sentences per point).
-   - ALWAYS include a '💡 Pro Tip:' section at the end of the answer.
+   - Provide high-value, detailed advice with at least 2 clear sentences for every point.
+   - ALWAYS end the response with a '💡 Pro Tip:' section.
 
 5. PROPERTY / PG QUESTIONS:
    - Help the user find suitable options on NestFinder.`;
@@ -55,22 +49,22 @@ STRICT FORMATTING & EMOJI RULES:
         messages: [
           { role: "system", content: systemPrompt },
           
-          // 🎯 FEW-SHOT EXAMPLES (Enforces Strict Double Newlines & Clean Markdown)
+          // 🎯 FEW-SHOT EXAMPLES (Updated to force Detailed Explanations + Pro Tip)
           { role: "user", content: "Padhai kaise karein?" },
           {
             role: "assistant",
-            content: `📚 **Effective Padhai Karne Ke Smart Tips:**\n\n1. 🎯 **Pomodoro Technique Try Karein:** 25 minute focus se padhein aur 5 minute break lein.\n\n2. 📱 **Distractions Se Door Rahein:** Padhate waqt mobile silent rakhein.\n\n3. 📝 **Notes Banayein:** Key points ko apni bhasha me likhein.\n\n4. 🔄 **Regular Revision:** Har hafte padha hua revise karein.`
+            content: `📚 **Effective Padhai Karne Ke Smart Tips:**\n\n1. 🎯 **Pomodoro Technique Try Karein:** 25 minute poore focus ke saath padhein aur uske baad 5 minute ka chhota break lein. Yeh aapke dimaag ko fresh rakhta hai aur lambi study sessions me tiredness nahi hone deta.\n\n2. 📱 **Distractions Se Door Rahein:** Padhate waqt mobile ko silent ya DND mode par rakhein. Social media notifications aapka focus sabse zyaada break karti hain.\n\n3. 📝 **Handwritten Notes Banayein:** Key points ko hamesha apni bhasha me likh kar samajhne ki koshish karein. Likhne se concept long-term memory me store ho jaata hai.\n\n4. 🔄 **Regular Revision:** Har hafte jo bhi padha hai uska weekend par revision zaroor karein. Revision ke bina purana padha hua jaldi bhool jaata hai.\n\n💡 **Pro Tip:** Padhai shuru karne se pehle ek daily goal list banayein aur apna sabse mushkil subject sabse pehle khatam karein.`
           },
           { role: "user", content: "glowing skin tips please" },
           {
             role: "assistant",
-            content: `✨ **Essential Tips for Glowing Skin:**\n\n1. 🧴 **Apply Sunscreen Daily:** Use a broad-spectrum SPF 30 sunscreen every morning.\n\n2. 💧 **Stay Hydrated:** Drink at least 3-4 liters of water daily.\n\n3. 🧼 **Gentle Cleansing:** Wash your face twice a day with a mild cleanser and moisturize.\n\n4. 🥗 **Healthy Diet:** Include fresh fruits and green vegetables in your diet.`
+            content: `✨ **Essential Tips for Glowing Skin:**\n\n1. 🧴 **Apply Sunscreen Daily:** Always use a broad-spectrum SPF 30+ sunscreen every morning before stepping out. UV rays damage skin cells and cause premature aging even on cloudy days.\n\n2. 💧 **Stay Hydrated:** Drink at least 3-4 liters of water daily to flush out internal toxins. Proper hydration gives your skin a natural, healthy plumpness.\n\n3. 🧼 **Gentle Cleansing Routine:** Wash your face twice a day with a mild, sulphate-free cleanser. Never go to sleep without removing makeup and dirt accumulated during the day.\n\n4. 🥗 **Nutrient-Rich Diet:** Incorporate fresh fruits, green leafy vegetables, and antioxidant-rich foods into your daily meals. Your skin reflects what you put inside your body.\n\n💡 **Pro Tip:** Change your pillowcases twice a week and avoid touching your face frequently to prevent oil and bacterial buildup.`
           },
           
           // Real user query:
           { role: "user", content: userMsg }
         ],
-        max_tokens: 800,
+        max_tokens: 1000,
         temperature: 0.7
       })
     });
