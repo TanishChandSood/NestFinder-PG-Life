@@ -7,10 +7,17 @@ app.use(express.json());
 
 app.post("/ask-ai", async (req, res) => {
   try {
-    const apiKey = process.env.GROQ_API_KEY;
+    // 🔑 API Keys Array (Supports GROQ_API_KEY_1 & GROQ_API_KEY_2, with fallback to GROQ_API_KEY)
+    const apiKeys = [
+      process.env.GROQ_API_KEY_1 || process.env.GROQ_API_KEY,
+      process.env.GROQ_API_KEY_2
+    ].filter(Boolean); // Filters out undefined keys
+
     const userMsg = req.body.msg || req.body.question;
 
-    if (!apiKey) return res.status(200).json({ reply: "⚠️ API Key missing in Vercel Environment Variables!" });
+    if (apiKeys.length === 0) {
+      return res.status(200).json({ reply: "⚠️ API Key missing in Vercel Environment Variables!" });
+    }
     if (!userMsg) return res.status(200).json({ reply: "Kuch puchiye!" });
 
     console.log(`🤖 Live User Asked: ${userMsg}`);
@@ -44,7 +51,7 @@ STRICT FORMATTING & EMOJI RULES:
 5. BRAND IDENTITY GUARDRAIL:
    - Always remain 'NestFinder AI'. Stay friendly and strictly maintain your persona.`;
 
-    // 🎯 PERFECTLY BALANCED FEW-SHOT EXAMPLES (ENGLISH vs HINGLISH)
+    // 🎯 FEW-SHOT EXAMPLES (ENGLISH vs HINGLISH)
     const messagesPayload = [
       { role: "system", content: systemPrompt },
 
@@ -90,8 +97,8 @@ STRICT FORMATTING & EMOJI RULES:
       { role: "user", content: userMsg }
     ];
 
-    // 🌐 Helper function for Groq API call with dynamic temperature
-    const callGroqAPI = async (modelName, temp = 0.5) => {
+    // 🌐 Helper function for Groq API call
+    const callGroqAPI = async (apiKey, modelName, temp = 0.5) => {
       return await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -107,35 +114,38 @@ STRICT FORMATTING & EMOJI RULES:
       });
     };
 
-    // 🚀 STEP 1: Try Primary High-Quality Model (llama-3.3-70b-versatile @ temp 0.5)
-    console.log("⚡ Requesting Primary Model: llama-3.3-70b-versatile");
-    let response = await callGroqAPI("llama-3.3-70b-versatile", 0.5);
-    let data = await response.json();
+    let isRateLimited = false;
 
-    // 🔄 STEP 2: Fallback to Fast Model if 70B hits Rate Limit (429) @ strict temp 0.2
-    if (response.status === 429 || data?.error?.code === "rate_limit_exceeded") {
-      console.warn("⚠️ Primary 70B Model Rate Limited! Fallback to llama-3.1-8b-instant (Strict Mode)...");
-      response = await callGroqAPI("llama-3.1-8b-instant", 0.2);
-      data = await response.json();
+    // 🚀 MULTI-KEY ROTATION LOOP (70B Model Only)
+    for (let i = 0; i < apiKeys.length; i++) {
+      const currentApiKey = apiKeys[i];
+      console.log(`⚡ Requesting llama-3.3-70b-versatile with Key #${i + 1}...`);
+
+      let response = await callGroqAPI(currentApiKey, "llama-3.3-70b-versatile", 0.5);
+      let data = await response.json();
+
+      if (response.status === 429 || data?.error?.code === "rate_limit_exceeded") {
+        console.warn(`⚠️ API Key #${i + 1} Rate Limited!`);
+        isRateLimited = true;
+        continue; // Try key #2 in next iteration
+      }
+
+      if (response.ok && data.choices?.[0]?.message?.content) {
+        let replyText = data.choices[0].message.content;
+        replyText = replyText.replace(/\\n/g, "\n");
+        return res.status(200).json({ reply: replyText });
+      }
     }
 
-    // 🔴 STEP 3: If Fallback Model also hits Rate Limit
-    if (response.status === 429 || data?.error?.code === "rate_limit_exceeded") {
-      console.warn("⚠️ Both Groq models Rate Limited!");
+    // 🔴 STEP 3: If ALL API keys hit Rate Limit
+    if (isRateLimited) {
+      console.warn("⚠️ All Groq API keys rate limited!");
       return res.status(200).json({
         reply: "⏳ **AI Cool-down Time!**\n\nAaj ke free AI query tokens complete ho gaye hain 😅. Kripya **10-15 minute baad** try karein ya tab tak humare PG Search filters explore karein! 🏠"
       });
     }
 
-    // 🟢 STEP 4: Success Response Handler
-    if (response.ok && data.choices?.[0]?.message?.content) {
-      let replyText = data.choices[0].message.content;
-      replyText = replyText.replace(/\\n/g, "\n");
-      return res.status(200).json({ reply: replyText });
-    }
-
     // ⚠️ Fallback Catch
-    console.error("❌ Unexpected Response:", data);
     return res.status(200).json({ reply: "Aap PG Search filters check kar sakte hain!" });
 
   } catch (err) {
