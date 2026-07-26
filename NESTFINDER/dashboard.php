@@ -299,7 +299,7 @@ $result_tours = mysqli_stmt_get_result($stmt_tours);
                             <?php if (mysqli_num_rows($result_tours) > 0) {
                                 while ($row = mysqli_fetch_assoc($result_tours)) {
 
-                                    $badge_color = 'background-color: #ffc107; color: #fff;'; // Pending
+                                    $badge_color = 'background-color: #ffc107; color: #fff;';
                                     if ($row['status'] == 'Confirmed') $badge_color = 'background-color: #28a745; color: #fff;';
                                     if ($row['status'] == 'Cancelled') $badge_color = 'background-color: #dc3545; color: #fff;';
                             ?>

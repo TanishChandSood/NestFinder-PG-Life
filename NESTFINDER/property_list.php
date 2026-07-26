@@ -147,6 +147,32 @@ while ($row = mysqli_fetch_assoc($result_map)) {
             border-top-left-radius: 2px;
         }
 
+
+        .chat-bubble.bot p {
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.bot p:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-bubble.bot ul,
+        .chat-bubble.bot ol {
+            padding-left: 18px;
+            margin-bottom: 6px;
+            margin-top: 4px;
+        }
+
+        .chat-bubble.bot li {
+            margin-bottom: 3px;
+        }
+
+        .chat-bubble.bot strong {
+            font-weight: 700;
+            color: #111;
+        }
+
         .chat-bubble.user {
             background: #ff5a5f;
             color: white;
@@ -209,6 +235,157 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                 margin-bottom: 10px;
                 font-size: 0.95rem !important;
                 padding: 10px 0 !important;
+            }
+        }
+
+
+
+
+        #compareFloatingBar {
+            display: none;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 1030 !important;
+            background: #2b3e50 !important;
+            color: #ffffff !important;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.35) !important;
+            padding: 10px 15px !important;
+        }
+
+
+        body.modal-open #openChatbotBubble,
+        body.modal-open .chat-bubble-launcher,
+        body.modal-open [class*="chat"],
+        body.modal-open [id*="chat"] {
+            display: none !important;
+        }
+
+
+        .compare-item-thumb {
+            background: #1a252f !important;
+            color: #00e676 !important;
+            font-size: 11px !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            border: 1px solid #34495e !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            white-space: nowrap !important;
+        }
+
+        .remove-compare-item {
+            color: #ff5252 !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+        }
+
+
+        @media screen and (min-width: 769px) {
+
+            body.has-compare-bar #openChatbotBubble,
+            body.has-compare-bar .chat-bubble-launcher,
+            body.has-compare-bar [class*="chat"],
+            body.has-compare-bar [id*="chat"] {
+                bottom: 100px !important;
+                transition: bottom 0.3s ease !important;
+            }
+
+            .compare-wrapper {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                max-width: 1200px !important;
+            }
+
+            .compare-info-section {
+                display: flex !important;
+                align-items: center !important;
+                gap: 15px !important;
+            }
+
+            #compareBadges {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+
+            .compare-action-btns {
+                display: flex !important;
+                gap: 8px !important;
+            }
+        }
+
+
+        @media screen and (max-width: 768px) {
+
+
+            body.has-compare-bar #openChatbotBubble,
+            body.has-compare-bar .chat-bubble-launcher,
+            body.has-compare-bar [class*="chat"],
+            body.has-compare-bar [id*="chat"] {
+                bottom: 140px !important;
+                transition: bottom 0.3s ease !important;
+            }
+
+            #compareFloatingBar {
+                padding: 8px 10px !important;
+            }
+
+            .compare-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                padding: 0 !important;
+            }
+
+
+            .compare-info-section {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 4px !important;
+                width: 100% !important;
+            }
+
+            .compare-label {
+                font-size: 11px !important;
+            }
+
+
+            #compareBadges {
+                display: flex !important;
+                flex-wrap: wrap !important;
+
+                align-items: center !important;
+                gap: 6px !important;
+                width: 100% !important;
+            }
+
+            .compare-item-thumb {
+                max-width: 100% !important;
+
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+
+
+            .compare-action-btns {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                width: 100% !important;
+                gap: 6px !important;
+            }
+
+            #clearCompareBtn,
+            #launchCompareModalBtn {
+                font-size: 11px !important;
+                padding: 4px 10px !important;
             }
         }
     </style>
@@ -300,13 +477,16 @@ while ($row = mysqli_fetch_assoc($result_map)) {
     </div>
 
     <div class="compare-bar" id="compareFloatingBar">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <span class="fw-bold mr-3">Compare PGs (<span id="compareCount">0</span>/3 selected):</span>
-                <div id="compareBadges" class="d-inline-block"></div>
+        <div class="container compare-wrapper">
+
+            <div class="compare-info-section">
+                <span class="fw-bold compare-label">Compare PGs (<span id="compareCount">0</span>/3 selected):</span>
+                <div id="compareBadges"></div>
             </div>
-            <div>
-                <button class="btn btn-warning btn-sm mr-2" id="clearCompareBtn">Clear All</button>
+
+
+            <div class="compare-action-btns">
+                <button class="btn btn-warning btn-sm" id="clearCompareBtn">Clear All</button>
                 <button class="btn btn-success btn-sm" id="launchCompareModalBtn">Compare Now</button>
             </div>
         </div>
@@ -402,17 +582,57 @@ while ($row = mysqli_fetch_assoc($result_map)) {
         $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 
 
+        $my_tags = [];
+        if ($current_user_id > 0) {
+            $sql_my_vibes = "SELECT vibe_tag FROM user_vibes WHERE user_id = '$current_user_id'";
+            $res_my_vibes = mysqli_query($conn, $sql_my_vibes);
+            while ($m_row = mysqli_fetch_assoc($res_my_vibes)) {
+                $my_tags[] = $m_row['vibe_tag'];
+            }
+        }
+
         $sql_default_prop = "SELECT id FROM properties WHERE city_id = '$city_id' LIMIT 1";
         $res_default_prop = mysqli_query($conn, $sql_default_prop);
         $default_prop = mysqli_fetch_assoc($res_default_prop);
         $property_id = $default_prop ? $default_prop['id'] : 1;
 
-        $sql_roommates = "SELECT * FROM users WHERE role = 'user' AND id != '$current_user_id' LIMIT 5";
+        $sql_roommates = "SELECT * FROM users WHERE role = 'user' AND id != '$current_user_id'";
         $result_roommates = mysqli_query($conn, $sql_roommates);
 
         if (mysqli_num_rows($result_roommates) > 0) {
             while ($roommate = mysqli_fetch_assoc($result_roommates)) {
                 $target_id = $roommate['id'];
+
+
+                $sql_vibes = "SELECT vibe_tag FROM user_vibes WHERE user_id = '$target_id'";
+                $res_vibes = mysqli_query($conn, $sql_vibes);
+                $user_tags = [];
+                while ($v_row = mysqli_fetch_assoc($res_vibes)) {
+                    $user_tags[] = $v_row['vibe_tag'];
+                }
+
+
+                if (empty($user_tags) || empty($my_tags)) {
+                    $match_text = "New User";
+                    $match_badge_class = "badge-light text-muted border";
+                } else {
+                    $common_tags = array_intersect($my_tags, $user_tags);
+                    $match_count = count($common_tags);
+
+                    if ($match_count >= 3) {
+                        $match_text = "95% Match";
+                        $match_badge_class = "badge-success";
+                    } elseif ($match_count == 2) {
+                        $match_text = "80% Match";
+                        $match_badge_class = "badge-info";
+                    } elseif ($match_count == 1) {
+                        $match_text = "65% Match";
+                        $match_badge_class = "badge-warning text-dark";
+                    } else {
+                        $match_text = "45% Match";
+                        $match_badge_class = "badge-dark";
+                    }
+                }
 
                 $btn_text = "Connect";
                 $btn_class = "btn-danger";
@@ -422,27 +642,21 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                 $is_received = false;
 
                 if ($current_user_id > 0) {
-
                     $sql_status = "SELECT * FROM roommate_connections 
-               WHERE (user_id = ? AND target_user_id = ?) 
-                  OR (user_id = ? AND target_user_id = ?)";
+                               WHERE (user_id = ? AND target_user_id = ?) 
+                                  OR (user_id = ? AND target_user_id = ?)";
 
                     $stmt_status = mysqli_prepare($conn, $sql_status);
 
                     if ($stmt_status) {
-
                         mysqli_stmt_bind_param($stmt_status, "iiii", $current_user_id, $target_id, $target_id, $current_user_id);
-
                         mysqli_stmt_execute($stmt_status);
-
-
-
                         $res_status = mysqli_stmt_get_result($stmt_status);
                     } else {
-
                         $res_status = false;
                     }
-                    if ($row_status = mysqli_fetch_assoc($res_status)) {
+
+                    if ($res_status && $row_status = mysqli_fetch_assoc($res_status)) {
                         if ($row_status['status'] == 'pending') {
                             if ($row_status['user_id'] == $current_user_id) {
                                 $btn_text = "Requested";
@@ -466,11 +680,21 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                     <div>
                         <h6 class="mb-1 font-weight-bold">
                             <?php echo htmlspecialchars($roommate['name'] ?? $roommate['full_name']); ?>
-                            <span class="badge badge-success ml-2">95% Match</span>
+
+
+                            <span class="badge <?php echo $match_badge_class; ?> ml-2">
+                                <?php echo $match_text; ?>
+                            </span>
                         </h6>
-                        <span class="badge badge-secondary">Late Night Owl</span>
-                        <span class="badge badge-secondary">Studious</span>
-                        <span class="badge badge-secondary">Non-Smoker</span>
+
+
+                        <?php if (!empty($user_tags)): ?>
+                            <?php foreach ($user_tags as $tag): ?>
+                                <span class="badge badge-secondary"><?php echo htmlspecialchars($tag); ?></span>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="badge badge-light text-dark">New User</span>
+                        <?php endif; ?>
                     </div>
 
                     <?php if ($is_connected): ?>
@@ -505,7 +729,7 @@ while ($row = mysqli_fetch_assoc($result_map)) {
     include "includes/footer.php";
     ?>
 
-    <script type="text/javascript" src="js/property_list.js"></script>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
@@ -699,43 +923,45 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                 });
             });
 
+
             function processingUserChatMessage() {
                 let userMsg = $('#userChatInput').val().trim();
                 if (userMsg === "") return;
-
 
                 $('#chatMessageFlowArea').append(`<div class="chat-bubble user">${userMsg}</div>`);
                 $('#userChatInput').val('');
                 $('#chatMessageFlowArea').scrollTop($('#chatMessageFlowArea')[0].scrollHeight);
 
-
-
                 let loadingId = 'loading-' + Math.floor(Math.random() * 10000);
                 $('#chatMessageFlowArea').append(
                     `<div id="${loadingId}" class="chat-bubble bot text-muted">
-            <small><i>🤖 AI is thinking (it may take 10-15s)...</i></small>
+            <small><i>🤖 AI is thinking...</i></small>
         </div>`
                 );
                 $('#chatMessageFlowArea').scrollTop($('#chatMessageFlowArea')[0].scrollHeight);
 
+                let liveLat = typeof userLiveLat !== 'undefined' ? userLiveLat : (typeof currentLat !== 'undefined' ? currentLat : null);
+                let liveLng = typeof userLiveLng !== 'undefined' ? userLiveLng : (typeof currentLng !== 'undefined' ? currentLng : null);
 
                 $.ajax({
                     url: 'chat_helper.php',
                     method: 'POST',
                     data: {
                         msg: userMsg,
-                        city_id: typeof currentCityId !== 'undefined' ? currentCityId : 1
+                        city_id: typeof currentCityId !== 'undefined' ? currentCityId : 1,
+                        user_lat: liveLat,
+                        user_lng: liveLng
                     },
                     success: function(botReply) {
-
                         $('#' + loadingId).remove();
 
 
-                        $('#chatMessageFlowArea').append(`<div class="chat-bubble bot">${botReply}</div>`);
+                        let formattedReply = marked.parse(botReply);
+
+                        $('#chatMessageFlowArea').append(`<div class="chat-bubble bot">${formattedReply}</div>`);
                         $('#chatMessageFlowArea').scrollTop($('#chatMessageFlowArea')[0].scrollHeight);
                     },
                     error: function() {
-
                         $('#' + loadingId).remove();
                         $('#chatMessageFlowArea').append(`<div class="chat-bubble bot text-danger">Server timeout. Cannot reach AI right now.</div>`);
                         $('#chatMessageFlowArea').scrollTop($('#chatMessageFlowArea')[0].scrollHeight);
@@ -829,6 +1055,26 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                 });
             }
 
+            function adjustChatbotPosition(showCompareBar) {
+                let chatIcon = $('#openChatbotBubble, .chat-bubble-launcher, [class*="chat"], #chatIcon');
+
+                if (showCompareBar) {
+
+                    let newBottom = (window.innerWidth <= 768) ? '125px' : '100px';
+                    chatIcon.css({
+                        'bottom': newBottom,
+                        'transition': 'bottom 0.3s ease'
+                    });
+                } else {
+
+                    chatIcon.css({
+                        'bottom': '20px',
+                        'transition': 'bottom 0.3s ease'
+                    });
+                }
+            }
+
+
             function updateCheckboxStates() {
                 $('.compare-chk').each(function() {
                     let id = $(this).data('id');
@@ -838,72 +1084,93 @@ while ($row = mysqli_fetch_assoc($result_map)) {
                 });
             }
 
+
+
             function renderCompareBar() {
                 if (compareList.length === 0) {
-                    $('#compareFloatingBar').slideUp();
+                    $('#compareFloatingBar').slideUp(150);
+
+                    $('body').removeClass('has-compare-bar');
                     return;
                 }
+
+
+                $('body').addClass('has-compare-bar');
+
                 $('#compareCount').text(compareList.length);
                 $('#compareBadges').empty();
+
                 compareList.forEach(item => {
                     $('#compareBadges').append(`
-                    <span class="compare-item-thumb">${item.name} <span class="remove-compare-item" data-id="${item.id}">&times;</span></span>
-                `);
+            <span class="compare-item-thumb" title="${item.name}">
+                <span class="badge-text">${item.name}</span>
+                <span class="remove-compare-item" data-id="${item.id}">&times;</span>
+            </span>
+        `);
                 });
-                $('#compareFloatingBar').slideDown();
+
+                $('#compareFloatingBar').slideDown(150);
             }
 
-            $(document).on('change', '.compare-chk', function() {
-                let id = $(this).data('id');
-                let name = $(this).data('name');
-                if ($(this).is(':checked')) {
-                    if (compareList.length >= 3) {
-                        alert("Maximum 3 PGs can be selected.");
-                        $(this).prop('checked', false);
-                        return;
+            $(document).ready(function() {
+
+
+                $(document).on('change', '.compare-chk', function() {
+                    let id = $(this).data('id');
+                    let name = $(this).data('name');
+                    if ($(this).is(':checked')) {
+                        if (compareList.length >= 3) {
+                            alert("Maximum 3 PGs can be selected.");
+                            $(this).prop('checked', false);
+                            return;
+                        }
+                        compareList.push({
+                            id: id,
+                            name: name
+                        });
+                    } else {
+                        compareList = compareList.filter(item => item.id != id);
                     }
-                    compareList.push({
-                        id: id,
-                        name: name
-                    });
-                } else {
-                    compareList = compareList.filter(item => item.id != id);
-                }
-                renderCompareBar();
-            });
-
-            $(document).on('click', '.remove-compare-item', function() {
-                let id = $(this).data('id');
-                compareList = compareList.filter(item => item.id != id);
-                $(`.compare-chk[data-id="${id}"]`).prop('checked', false);
-                renderCompareBar();
-            });
-
-            $('#clearCompareBtn').on('click', function() {
-                compareList = [];
-                $('.compare-chk').prop('checked', false);
-                renderCompareBar();
-            });
-
-            $('#launchCompareModalBtn').on('click', function() {
-                let targetIds = compareList.map(item => item.id);
-                $('#compareMatrixTableBody').html('<div class="text-center py-4"><div class="spinner-border text-success"></div></div>');
-                $('#compare-results-modal').modal('show');
-                $.ajax({
-                    url: 'get_compare_matrix.php',
-                    method: 'POST',
-                    data: {
-                        ids: targetIds
-                    },
-                    success: function(tableMarkup) {
-                        $('#compareMatrixTableBody').html(tableMarkup);
-                    },
-                    error: function() {
-                        $('#compareMatrixTableBody').html('<p class="text-danger">Failed to process matrices.</p>');
-                    }
+                    renderCompareBar();
                 });
-            });
 
+
+                $(document).on('click', '.remove-compare-item', function() {
+                    let id = $(this).data('id');
+                    compareList = compareList.filter(item => item.id != id);
+                    $(`.compare-chk[data-id="${id}"]`).prop('checked', false);
+                    renderCompareBar();
+                });
+
+
+                $('#clearCompareBtn').on('click', function() {
+                    compareList = [];
+                    $('.compare-chk').prop('checked', false);
+                    renderCompareBar();
+                });
+
+
+                $('#launchCompareModalBtn').on('click', function() {
+                    let targetIds = compareList.map(item => item.id);
+                    $('#compareMatrixTableBody').html('<div class="text-center py-4"><div class="spinner-border text-success"></div></div>');
+                    $('#compare-results-modal').modal('show');
+
+                    $.ajax({
+                        url: 'get_compare_matrix.php',
+                        method: 'POST',
+                        data: {
+                            ids: targetIds
+                        },
+                        success: function(tableMarkup) {
+                            $('#compareMatrixTableBody').html(tableMarkup);
+                        },
+                        error: function() {
+                            $('#compareMatrixTableBody').html('<p class="text-danger text-center">Failed to load comparison data.</p>');
+                        }
+                    });
+                });
+
+            });
             $(document).on('click', '.gender-filter-btn', function() {
                 $('.gender-filter-btn').removeClass('btn-active');
                 $(this).addClass('btn-active');

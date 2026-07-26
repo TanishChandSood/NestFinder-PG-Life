@@ -158,8 +158,14 @@ mysqli_stmt_close($stmt_4);
             $total_rating = ($property['rating_clean'] + $property['rating_food'] + $property['rating_safety']) / 3;
             $total_rating = round($total_rating, 1);
             ?>
+
             <div class="star-container" title="<?= $total_rating ?>">
                 <?php
+                if ($total_rating == 0) {
+
+                    echo '<span class="badge badge-info">New Property</span> ';
+                }
+
                 $rating = $total_rating;
                 for ($i = 0; $i < 5; $i++) {
                     if ($rating >= $i + 0.8) {
@@ -482,6 +488,39 @@ mysqli_stmt_close($stmt_4);
             </div>
         </div>
     </div>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <div class="add-review-section mt-4 p-4 card">
+            <h4>Write a Review</h4>
+            <form action="submit_review.php" method="POST">
+
+                <input type="hidden" name="property_id" value="<?= $property_id ?>">
+
+                <div class="form-row mb-3">
+                    <div class="col">
+                        <label>Cleanliness (1-5):</label>
+                        <input type="number" name="rating_clean" min="1" max="5" step="0.1" class="form-control" required>
+                    </div>
+                    <div class="col">
+                        <label>Food Quality (1-5):</label>
+                        <input type="number" name="rating_food" min="1" max="5" step="0.1" class="form-control" required>
+                    </div>
+                    <div class="col">
+                        <label>Safety (1-5):</label>
+                        <input type="number" name="rating_safety" min="1" max="5" step="0.1" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Your Feedback / Comment:</label>
+                    <textarea name="review_text" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <button type="submit" name="submit_review" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+    <?php else: ?>
+        <p class="mt-3"><a href="login.php">Log in</a> to write a review for this property.</p>
+    <?php endif; ?>
 
     <div class="property-testimonials page-container">
         <h1>What people say</h1>

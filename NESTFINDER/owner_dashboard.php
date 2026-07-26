@@ -56,6 +56,9 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owner Dashboard - Tour Requests</title>
+    <?php
+    include "includes/head_links.php";
+    ?>
     <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 
@@ -63,8 +66,8 @@ $result = mysqli_query($conn, $sql);
     <div class="container mt-4 mt-md-5">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 text-center text-md-left">
             <h2 class="mb-2 mb-md-0">👑 PG Owner Dashboard</h2>
-            
-         
+
+
             <div class="d-flex flex-column flex-md-row align-items-center">
                 <h4 class="text-muted mb-3 mb-md-0 mr-md-3">Tour Booking Management</h4>
                 <div class="dashboard-buttons">
@@ -219,7 +222,6 @@ $result = mysqli_query($conn, $sql);
             <?php } ?>
         </div>
     </div>
-
     <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -296,9 +298,37 @@ $result = mysqli_query($conn, $sql);
                         </button>
                         <span id="locationStatus" class="d-block d-md-inline text-muted mt-2 mt-md-0 ml-md-2" style="font-size: 13px;"></span>
 
+
+                        <div class="form-group mb-3 border p-3 rounded bg-light">
+                            <label class="font-weight-bold d-block mb-2">Select Amenities Available:</label>
+                            <div class="row">
+                                <?php
+                                $amenity_query = "SELECT * FROM amenities ORDER BY type ASC, name ASC";
+                                $amenity_result = mysqli_query($conn, $amenity_query);
+
+                                if (mysqli_num_rows($amenity_result) > 0) {
+                                    while ($amenity = mysqli_fetch_assoc($amenity_result)) {
+                                ?>
+                                        <div class="col-6 col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="amenities[]" value="<?php echo intval($amenity['id']); ?>" id="amenity_<?php echo intval($amenity['id']); ?>">
+                                                <label class="form-check-label" for="amenity_<?php echo intval($amenity['id']); ?>" style="cursor: pointer;">
+                                                    <?php echo htmlspecialchars($amenity['name']); ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                <?php
+                                    }
+                                } else {
+                                    echo "<p class='text-muted small col-12'>No amenities found in database.</p>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+
                         <div class="form-group mt-2">
-                            <label>Description & Amenities</label>
-                            <textarea name="description" class="form-control" rows="4" required placeholder="Tell tenants about Wi-Fi, Food, AC, Laundry, Electricity bills, etc."></textarea>
+                            <label>Description</label>
+                            <textarea name="description" class="form-control" rows="3" required placeholder="Tell tenants about rules, nearby locations, electricity bills, etc."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

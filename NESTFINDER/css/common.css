@@ -98,7 +98,7 @@ input[type="radio"] {
     z-index: 10000000;
 }
 
-/* Login Modal */
+
 #login-modal .modal-dialog {
     width: 350px;
     margin: auto;
@@ -109,7 +109,7 @@ input[type="radio"] {
     justify-content: center;
 }
 
-/* Header */
+
 .header {
     background-color: white;
     font-size: 13px;
@@ -147,7 +147,7 @@ input[type="radio"] {
     }
 }
 
-/* Footer */
+
 .footer {
     background-color: #333333;
     font-size: 13px;
@@ -182,4 +182,26 @@ input[type="radio"] {
     color: #a9a9a9;
     text-align: center;
     padding-top: 24px;
+}
+
+.chat-message-ai,
+.chat-response,
+.chat-body p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.chat-message-ai ul,
+.chat-message-ai ol {
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+.chat-message-ai li {
+    margin-bottom: 4px;
+}
+
+.chat-message-ai strong {
+    color: #000;
+    font-weight: 700;
 }

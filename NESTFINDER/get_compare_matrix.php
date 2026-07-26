@@ -3,10 +3,6 @@ session_start();
 include "includes/database_connect.php";
 
 
-if (!isset($_SESSION['user_id'])) {
-    exit("Unauthorized access");
-}
-
 if (!isset($_POST['ids']) || !is_array($_POST['ids']) || empty($_POST['ids'])) {
     echo "<p class='text-danger text-center'>No properties selected.</p>";
     exit();

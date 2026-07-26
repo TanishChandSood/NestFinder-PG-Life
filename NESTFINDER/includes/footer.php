@@ -18,7 +18,7 @@
             </div>
         </div>
 
-    
+
         <div class="footer-owner-link text-center" style="margin: 20px 0 10px 0;">
             <a href="login.php" style="color: #aaa; text-decoration: none; font-size: 15px; font-weight: 500;">
                 <i class="fas fa-user-shield"></i> Portal for Property Owners

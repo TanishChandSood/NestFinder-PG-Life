@@ -10,7 +10,7 @@ $password = $_POST['password'];
 
 $role = isset($_POST['role']) ? $_POST['role'] : 'user';
 if (!in_array($role, ['user', 'owner'])) {
-    $role = 'user'; // Default safety fallback
+    $role = 'user';
 }
 
 $password_hashed = password_hash($password, PASSWORD_DEFAULT);

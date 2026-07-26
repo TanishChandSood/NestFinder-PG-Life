@@ -2,7 +2,7 @@
 session_start();
 include('../includes/database_connect.php');
 
-header('Content-Type: application/json'); // JavaScript ko batane ke liye ki hum JSON bhej rahe hain
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';

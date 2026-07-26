@@ -4,9 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
-header("Pragma: no-cache");                                   // HTTP 1.0
-header("Expires: 0");                                          // Proxies
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'owner') {
     header("Location: owner_dashboard.php");
@@ -17,9 +17,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'owner') {
 <html lang="en">
 
 <head>
-
-    <link rel="icon" type="image/png" sizes="32x16" href="favicon.png">
-    <link rel="icon" type="image/png" sizes="48x16" href="favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | PG Life</title>

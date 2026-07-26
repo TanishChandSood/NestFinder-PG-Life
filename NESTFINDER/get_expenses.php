@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401); // 401 Unauthorized status
+    http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Not authenticated']);
     exit;
 }
@@ -38,7 +38,7 @@ if ($stmt) {
     } else {
 
         error_log("Database execution error in get_expenses.php: " . mysqli_error($conn));
-        http_response_code(500); // Internal Server Error
+        http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Something went wrong on the server.']);
     }
 
