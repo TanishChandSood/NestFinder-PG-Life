@@ -1,0 +1,4 @@
+node_modules/
+.env
+NESTFINDER/ai-service/node_modules/
+NESTFINDER/ai-service/.env
