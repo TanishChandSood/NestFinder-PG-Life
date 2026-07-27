@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2026 at 08:29 AM
+-- Generation Time: Jul 27, 2026 at 08:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -133,7 +133,7 @@ INSERT INTO `interested_users_properties` (`id`, `user_id`, `property_id`) VALUE
 (92, 5, 3),
 (98, 5, 5),
 (99, 5, 2),
-(102, 5, 1);
+(104, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -219,13 +219,14 @@ CREATE TABLE `properties` (
 INSERT INTO `properties` (`id`, `city_id`, `name`, `address`, `description`, `gender`, `image`, `rent`, `rating_clean`, `rating_food`, `rating_safety`, `owner_id`, `views`, `lat`, `lng`) VALUES
 (1, 1, 'Elite Residency PG', 'Block-B, Near Main Market, Connaught Place, New Delhi 110001', 'Fully managed modern living space with premium facilities. Perfect for students and working professionals looking for a peaceful environment. Well-connected to the metro station and local markets. Includes high-speed internet and weekly deep cleaning service.', 'male', NULL, 7500, 4.5, 4.0, 4.7, 8, 8, 28.6328, 77.2195),
 (2, 1, 'Stanza Nest Stay', 'H.No. 124, Near Metro Pillar 45, Karol Bagh, New Delhi 110005', 'Comfortable and spacious studio rooms available on sharing basis. Located in a safe residential area with 24/7 security. Common lounge area available for chilling with friends. Walking distance from major coaching institutes and food hubs.', 'unisex', NULL, 6500, 3.8, 3.5, 4.2, 8, 7, 28.6442, 77.1932),
-(3, 2, 'Skyline Luxury Living', 'Sector 2, Near Link Road, Andheri West, Mumbai 400053', 'Premium girls PG with top-notch safety features. Located in a posh locality with quick access to corporate parks and cafes. Fully furnished kitchen, automated washing machines, and cozy bedding provided. Feels like a home away from home.', 'female', NULL, 12000, 4.8, 4.5, 4.9, 8, 5, 19.1312, 72.8365),
+(3, 2, 'Skyline Luxury Living', 'Sector 2, Near Link Road, Andheri West, Mumbai 400053', 'Premium girls PG with top-notch safety features. Located in a posh locality with quick access to corporate parks and cafes. Fully furnished kitchen, automated washing machines, and cozy bedding provided. Feels like a home away from home.', 'female', NULL, 12000, 4.8, 4.5, 4.9, 8, 7, 19.1312, 72.8365),
 (4, 2, 'The Comfort Zone', 'Plot 42, Gorai Road, Borivali West, Mumbai 400092', 'Beautifully designed rooms tailored for students. Equipped with individual study tables, wardrobes, and attached washrooms. Great community of flatmates to network and grow together. Food menu curated by professional chefs.', 'female', NULL, 9000, 4.1, 3.9, 4.4, 8, 4, 19.2356, 72.8344),
-(5, 2, 'Ganpati Paying Guest', 'Sainath Complex, Near SV Road, Borivali East, Mumbai 400066', 'Excellent budget-friendly property offering premium amenities. Spacious rooms with separate balconies, proper ventilation, and ambient lighting. Ideal for anyone wanting a clean, peaceful, and productive environment in Mumbai.', 'male', NULL, 8500, 4.4, 4.1, 4.6, 8, 7, 19.2281, 72.8572),
-(6, 5, 'The Ridge View Premium Homestay', 'Near Mall Road, Below Kali Bari Temple, Shimla, Himachal Pradesh - 171001', 'Beautiful mountain view PG near Mall Road. Fully furnished rooms with room heaters for winters, 24/7 hot running water (geyser), high-speed Wi-Fi (50 Mbps), and home-cooked authentic North Indian meals. Perfect for students and remote working IT professionals. Extremely safe with CCTV backup.', 'unisex', '1782856081_images.jpg', 9500, 5.0, 5.0, 5.0, 8, 4, 31.1048, 77.1734),
-(8, 3, 'Silicon Valley Premium Living', 'lat No. 204, 3rd Cross Road, Near Sony World Signal, Koramangala 4th Block, Bengaluru, Karnataka - 560034', 'Premium co-living space perfect for tech professionals and students. High-speed 5G Wi-Fi (300 Mbps), 3 times delicious North & South Indian food included, fully automatic washing machines, AC, 24/7 power backup, attached balcony, CCTV security, and daily housekeeping. No hidden charges, electricity bill is included in the rent!', 'unisex', '1782858224_images (1).jpg', 8500, 5.0, 5.0, 5.0, 8, 3, 12.9345, 77.6266),
-(14, 4, 'Ismile Living Hyderabad', 'Plot 12, Near DLF Cyber City, Gachibowli, Hyderabad, Telangana 500032', 'A premium, fully managed tech-enabled student accommodation.', 'unisex', NULL, 9500, 4.5, 4.0, 4.8, 11, 5, 17.4402, 78.339),
-(15, 4, 'Elite Stay PG', 'H.No 10-3/A, Beside Metro Station, Ameerpet, Hyderabad, Telangana 500016', 'Affordable and highly accessible budget accommodation.', 'male', NULL, 7500, 4.2, 3.8, 4.0, 11, 1, 17.4348, 78.448);
+(5, 2, 'Ganpati Paying Guest', 'Sainath Complex, Near SV Road, Borivali East, Mumbai 400066', 'Excellent budget-friendly property offering premium amenities. Spacious rooms with separate balconies, proper ventilation, and ambient lighting. Ideal for anyone wanting a clean, peaceful, and productive environment in Mumbai.', 'male', NULL, 8500, 4.0, 4.5, 4.5, 8, 7, 19.2281, 72.8572),
+(6, 5, 'The Ridge View Premium Homestay', 'Near Mall Road, Below Kali Bari Temple, Shimla, Himachal Pradesh - 171001', 'Beautiful mountain view PG near Mall Road. Fully furnished rooms with room heaters for winters, 24/7 hot running water (geyser), high-speed Wi-Fi (50 Mbps), and home-cooked authentic North Indian meals. Perfect for students and remote working IT professionals. Extremely safe with CCTV backup.', 'unisex', '1782856081_images.jpg', 9500, 5.0, 5.0, 5.0, 8, 9, 31.1048, 77.1734),
+(8, 3, 'Silicon Valley Premium Living', 'lat No. 204, 3rd Cross Road, Near Sony World Signal, Koramangala 4th Block, Bengaluru, Karnataka - 560034', 'Premium co-living space perfect for tech professionals and students. High-speed 5G Wi-Fi (300 Mbps), 3 times delicious North & South Indian food included, fully automatic washing machines, AC, 24/7 power backup, attached balcony, CCTV security, and daily housekeeping. No hidden charges, electricity bill is included in the rent!', 'unisex', '1782858224_images (1).jpg', 8500, 5.0, 5.0, 5.0, 8, 8, 12.9345, 77.6266),
+(14, 4, 'Ismile Living Hyderabad', 'Plot 12, Near DLF Cyber City, Gachibowli, Hyderabad, Telangana 500032', 'A premium, fully managed tech-enabled student accommodation.', 'unisex', NULL, 9500, 4.5, 4.0, 4.8, 11, 13, 17.4402, 78.339),
+(15, 4, 'Elite Stay PG', 'H.No 10-3/A, Beside Metro Station, Ameerpet, Hyderabad, Telangana 500016', 'Affordable and highly accessible budget accommodation.', 'male', NULL, 7500, 4.2, 3.8, 4.0, 11, 1, 17.4348, 78.448),
+(16, 5, 'Heights Student & Executive PG', 'Near Mall Road, Below Kali Bari Temple, Shimla, Himachal Pradesh - 171001', 'Beautiful mountain-view PG located just 10 minutes walk from Mall Road. Offers 24/7 running hot water with high-capacity geysers, high-speed Wi-Fi, home-cooked hygienic meals, and 3-tier security. Ideal for students and working professionals looking for a quiet and peaceful environment in Shimla.', 'unisex', '1784885547_Screenshot 2026-07-24 145845.png', 9500, 4.4, 4.4, 4.4, 8, 11, 31.5428, 78.2549);
 
 -- --------------------------------------------------------
 
@@ -287,7 +288,44 @@ INSERT INTO `properties_amenities` (`id`, `property_id`, `amenity_id`) VALUES
 (41, 5, 10),
 (42, 5, 11),
 (43, 5, 12),
-(44, 5, 13);
+(44, 5, 13),
+(45, 16, 5),
+(46, 16, 12),
+(47, 16, 2),
+(48, 16, 7),
+(49, 16, 1),
+(50, 16, 13),
+(51, 6, 1),
+(52, 6, 2),
+(53, 6, 3),
+(54, 6, 5),
+(55, 6, 6),
+(56, 6, 7),
+(57, 6, 12),
+(58, 6, 13),
+(59, 8, 1),
+(60, 8, 2),
+(61, 8, 4),
+(62, 8, 5),
+(63, 8, 7),
+(64, 8, 9),
+(65, 8, 10),
+(66, 8, 11),
+(67, 8, 12),
+(68, 14, 1),
+(69, 14, 2),
+(70, 14, 5),
+(71, 14, 7),
+(72, 14, 9),
+(73, 14, 10),
+(74, 14, 12),
+(75, 14, 13),
+(76, 15, 1),
+(77, 15, 2),
+(78, 15, 5),
+(79, 15, 7),
+(80, 15, 12),
+(81, 15, 13);
 
 -- --------------------------------------------------------
 
@@ -311,7 +349,10 @@ CREATE TABLE `reviews` (
 INSERT INTO `reviews` (`id`, `property_id`, `user_id`, `rating`, `review_text`, `created_at`) VALUES
 (1, 1, 1, 4.5, 'Amazing PG with premium facilities!', '2026-06-27 23:15:50'),
 (2, 2, 2, 4.0, 'Very affordable and neat environment.', '2026-06-27 23:15:50'),
-(3, 4, 1, 4.2, 'Good food and stable wifi connection.', '2026-06-27 23:15:50');
+(3, 4, 1, 4.2, 'Good food and stable wifi connection.', '2026-06-27 23:15:50'),
+(4, 5, 5, 4.3, 'I enjoyed this place . It is very beautiful place for Traveling purpose . You must visit this place one time in your entire life ', '2026-07-24 11:33:52'),
+(5, 16, 5, 4.3, 'Awesome location near Mall Road! The rooms were super clean and warm during winters. Highly recommended for students and working professionals.', '2026-07-24 11:54:20'),
+(6, 16, 5, 4.5, 'Awesome location near Mall Road! The rooms were super clean and warm during winters. Highly recommended for students and working professionals.', '2026-07-24 11:59:39');
 
 -- --------------------------------------------------------
 
@@ -365,7 +406,17 @@ INSERT INTO `testimonials` (`id`, `property_id`, `user_name`, `content`) VALUES
 (7, 3, 'Sneha Kapoor', 'Love the community here! Met some amazing friends. The safety features give complete peace of mind.'),
 (8, 4, 'Tanvi Joshi', 'Everything is well-managed from laundry to meals. The location is very convenient with public transport nearby.'),
 (9, 5, 'Vikram Malhotra', 'Amazing value for money in Mumbai. Clean rooms, helpful warden, and all necessary facilities work perfectly.'),
-(10, 5, 'Siddharth Jain', 'The property is well-maintained and very close to the station. Definitely the best PG option around Borivali.');
+(10, 5, 'Siddharth Jain', 'The property is well-maintained and very close to the station. Definitely the best PG option around Borivali.'),
+(11, 16, 'Bhumi Sharma', 'Well-maintained property with great facilities. High hygiene and good environment!'),
+(12, 6, 'Vikram Malhotra', 'The mountain view from the room is breathtaking! Perfect heating and 24/7 geyser facility during cold winters.'),
+(13, 6, 'Ananya Sharma', 'Super clean homestay with delicious home-cooked meals. Mall Road is just a 10-minute peaceful walk.'),
+(14, 8, 'Karthik Raja', 'Located right in Koramangala! High-speed Wi-Fi makes Work From Home super smooth. Modern interiors.'),
+(15, 8, 'Neha Kulkarni', 'Spacious rooms with great ventilation. The maintenance staff is quick to resolve any issues.'),
+(16, 14, 'Rahul Verma', 'Very close to DLF Cyber City. Clean rooms with spacious individual wooden wardrobes.'),
+(17, 14, 'Pooja Reddy', 'Felt very safe as a working woman. CCTV surveillance and biometric security are great.'),
+(18, 15, 'Suresh Kumar', 'Affordable budget PG located right beside Ameerpet Metro station. Best option for coaching students.'),
+(19, 15, 'Amit Patel', 'Decent food and quiet environment for studying. Good value for money.'),
+(20, 16, 'test', 'Awesome location near Mall Road! The rooms were super clean and warm during winters. Highly recommended for students and working professionals.');
 
 -- --------------------------------------------------------
 
@@ -446,8 +497,9 @@ INSERT INTO `user_vibes` (`id`, `user_id`, `vibe_tag`) VALUES
 (2, 1, 'Studious'),
 (3, 2, 'Early Bird'),
 (4, 2, 'Veg Only'),
-(5, 3, 'Late Night Owl'),
-(6, 3, 'Studious');
+(7, 5, 'Late Night Owl'),
+(8, 5, 'Gamer'),
+(9, 5, 'Fitness Freak');
 
 --
 -- Indexes for dumped tables
@@ -565,7 +617,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `interested_users_properties`
 --
 ALTER TABLE `interested_users_properties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -577,19 +629,19 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `properties`
 --
 ALTER TABLE `properties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `properties_amenities`
 --
 ALTER TABLE `properties_amenities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `roommate_connections`
@@ -601,7 +653,7 @@ ALTER TABLE `roommate_connections`
 -- AUTO_INCREMENT for table `testimonials`
 --
 ALTER TABLE `testimonials`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tour_bookings`
@@ -619,7 +671,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_vibes`
 --
 ALTER TABLE `user_vibes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
