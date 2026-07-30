@@ -1,9 +1,77 @@
 import express from "express";
 import cors from "cors";
+import { inject } from "@vercel/analytics";
 
 const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
+
+// Initialize Vercel Web Analytics
+inject();
+
+// Health check endpoint with analytics tracking
+app.get("/", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>NestFinder AI Service - Status</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+          max-width: 600px;
+          margin: 50px auto;
+          padding: 20px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          text-align: center;
+        }
+        .container {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 { margin: 0 0 20px; font-size: 2.5em; }
+        .status { 
+          display: inline-block;
+          padding: 10px 20px;
+          background: #10b981;
+          border-radius: 50px;
+          font-weight: bold;
+          margin: 20px 0;
+        }
+        .endpoints {
+          margin-top: 30px;
+          text-align: left;
+          background: rgba(0, 0, 0, 0.2);
+          padding: 20px;
+          border-radius: 10px;
+        }
+        .endpoint {
+          margin: 10px 0;
+          font-family: 'Courier New', monospace;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>🤖 NestFinder AI Service</h1>
+        <div class="status">✅ Service Online</div>
+        <p>AI-powered assistant for NestFinder PG platform</p>
+        <div class="endpoints">
+          <h3>Available Endpoints:</h3>
+          <div class="endpoint">POST /ask-ai - AI chat endpoint</div>
+          <div class="endpoint">GET / - Status page (current)</div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `);
+});
 
 app.post("/ask-ai", async (req, res) => {
   try {
