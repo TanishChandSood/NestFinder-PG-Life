@@ -576,7 +576,7 @@ mysqli_stmt_close($stmt_4);
     include "includes/footer.php";
     ?>
 
-    <script type="text/javascript" src="js/property_detail.js"></script>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
