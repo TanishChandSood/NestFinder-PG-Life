@@ -5,13 +5,17 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+// ⚡ Active Groq Models Configuration
+const PRIMARY_MODEL = "openai/gpt-oss-120b";
+const SECONDARY_FALLBACK_MODEL = "llama-3.1-8b-instant";
+
 app.post("/ask-ai", async (req, res) => {
   try {
-    // 🔑 API Keys Array (Supports GROQ_API_KEY_1 & GROQ_API_KEY_2, with fallback to GROQ_API_KEY)
+    // 🔑 API Keys Array (Supports GROQ_API_KEY_1 & GROQ_API_KEY_2)
     const apiKeys = [
       process.env.GROQ_API_KEY_1 || process.env.GROQ_API_KEY,
       process.env.GROQ_API_KEY_2
-    ].filter(Boolean); // Filters out undefined keys
+    ].filter(Boolean);
 
     const userMsg = req.body.msg || req.body.question;
 
@@ -116,30 +120,46 @@ STRICT FORMATTING & EMOJI RULES:
 
     let isRateLimited = false;
 
-    // 🚀 MULTI-KEY ROTATION LOOP (70B Model Only)
+    // 🚀 STEP 1: MULTI-KEY ROTATION LOOP (Primary 120B Model)
     for (let i = 0; i < apiKeys.length; i++) {
       const currentApiKey = apiKeys[i];
-      console.log(`⚡ Requesting llama-3.3-70b-versatile with Key #${i + 1}...`);
+      console.log(`⚡ Requesting ${PRIMARY_MODEL} with Key #${i + 1}...`);
 
-      let response = await callGroqAPI(currentApiKey, "llama-3.3-70b-versatile", 0.5);
-      let data = await response.json();
+      try {
+        let response = await callGroqAPI(currentApiKey, PRIMARY_MODEL, 0.5);
+        let data = await response.json();
 
-      if (response.status === 429 || data?.error?.code === "rate_limit_exceeded") {
-        console.warn(`⚠️ API Key #${i + 1} Rate Limited!`);
-        isRateLimited = true;
-        continue; // Try key #2 in next iteration
-      }
+        if (response.status === 429 || data?.error?.code === "rate_limit_exceeded") {
+          console.warn(`⚠️ API Key #${i + 1} Rate Limited on ${PRIMARY_MODEL}!`);
+          isRateLimited = true;
+          continue; // Try key #2 in next iteration
+        }
 
-      if (response.ok && data.choices?.[0]?.message?.content) {
-        let replyText = data.choices[0].message.content;
-        replyText = replyText.replace(/\\n/g, "\n");
-        return res.status(200).json({ reply: replyText });
+        if (response.ok && data.choices?.[0]?.message?.content) {
+          let replyText = data.choices[0].message.content;
+          replyText = replyText.replace(/\\n/g, "\n");
+          return res.status(200).json({ reply: replyText });
+        }
+      } catch (err) {
+        console.error(`❌ Fetch error on Key #${i + 1}:`, err);
       }
     }
 
-    // 🔴 STEP 3: If ALL API keys hit Rate Limit
+    // 🔴 STEP 2: Emergency Model Fallback (Agar dono keys par 120B rate-limit ho gaya)
     if (isRateLimited) {
-      console.warn("⚠️ All Groq API keys rate limited!");
+      console.warn(`⚠️ Both keys rate-limited on ${PRIMARY_MODEL}. Trying fast fallback model (${SECONDARY_FALLBACK_MODEL})...`);
+      try {
+        let response = await callGroqAPI(apiKeys[0], SECONDARY_FALLBACK_MODEL, 0.5);
+        let data = await response.json();
+
+        if (response.ok && data.choices?.[0]?.message?.content) {
+          let replyText = data.choices[0].message.content.replace(/\\n/g, "\n");
+          return res.status(200).json({ reply: replyText });
+        }
+      } catch (fallbackErr) {
+        console.error("❌ Fallback model error:", fallbackErr);
+      }
+
       return res.status(200).json({
         reply: "⏳ **AI Cool-down Time!**\n\nAaj ke free AI query tokens complete ho gaye hain 😅. Kripya **10-15 minute baad** try karein ya tab tak humare PG Search filters explore karein! 🏠"
       });
