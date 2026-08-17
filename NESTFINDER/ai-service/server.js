@@ -10,16 +10,24 @@ app.use(express.json());
 
 // 🟢 Health Check Route
 app.get("/", (req, res) => {
-  res.status(200).send("NestFinder AI Server with Live Tavily Search is Running! 🚀");
+  res.status(200).send("NestFinder AI Server with Multi-Key Tavily Search is Running! 🚀");
 });
 
 const MODEL_NAME = "openai/gpt-oss-120b";
 
 app.post("/ask-ai", async (req, res) => {
   try {
+    // 🔑 Groq API Keys Array (Rotation Support)
     const API_KEYS = [
       process.env.GROQ_API_KEY_1 || process.env.GROQ_API_KEY,
       process.env.GROQ_API_KEY_2,
+    ].filter(Boolean);
+
+    // 🔑 Tavily API Keys Array (Failover / Rotation Support)
+    const TAVILY_KEYS = [
+      process.env.TAVILY_API_KEY_1 || process.env.TAVILY_API_KEY,
+      process.env.TAVILY_API_KEY_2,
+      process.env.TAVILY_API_KEY_3,
     ].filter(Boolean);
 
     const userMsg = req.body.msg || req.body.question;
@@ -40,38 +48,55 @@ app.post("/ask-ai", async (req, res) => {
       timeStyle: "medium",
     });
 
-    // 🌐 LIVE INTERNET SEARCH (Using TAVILY API - RAG System)
+    // 🌐 LIVE INTERNET SEARCH (Using TAVILY API with Smart Key Failover)
     let liveWebContext = "";
-    if (process.env.TAVILY_API_KEY) {
-      try {
-        console.log(`🔍 Searching live internet via Tavily for: "${userMsg}"...`);
-        const tavilyRes = await fetch("https://api.tavily.com/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            api_key: process.env.TAVILY_API_KEY,
-            query: userMsg,
-            search_depth: "basic",
-            include_answer: false,
-            max_results: 3
-          })
-        });
+    if (TAVILY_KEYS.length > 0) {
+      for (let i = 0; i < TAVILY_KEYS.length; i++) {
+        const currentTavilyKey = TAVILY_KEYS[i];
+        try {
+          console.log(`🔍 Searching live internet via Tavily (Key #${i + 1}) for: "${userMsg}"...`);
+          
+          const tavilyRes = await fetch("https://api.tavily.com/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              api_key: currentTavilyKey,
+              query: userMsg,
+              search_depth: "basic",
+              include_answer: false,
+              max_results: 3
+            })
+          });
 
-        const tavilyData = await tavilyRes.json();
+          // ⚠️ Rate limit / quota over (429) ya Unauthorized (401) check
+          if (tavilyRes.status === 429 || tavilyRes.status === 401) {
+            console.warn(`⚠️ Tavily Key #${i + 1} limit exhausted or invalid (Status ${tavilyRes.status}). Trying Key #${i + 2}...`);
+            continue; // Next key par switch karein
+          }
 
-        // 🟢 Check if Tavily actually found results
-        if (tavilyData.results && tavilyData.results.length > 0) {
-          const topSnippets = tavilyData.results.map(r => r.content).join(" | ");
-          liveWebContext = `\n- Live Internet Search Context: ${topSnippets}`;
-          console.log(`✅ Tavily Web search success! Fresh data fetched.`);
-        } else {
-          console.log(`⚠️ Tavily Web search returned empty for this query.`);
+          if (!tavilyRes.ok) {
+            console.warn(`⚠️ Tavily API Error on Key #${i + 1}: ${tavilyRes.statusText}`);
+            continue;
+          }
+
+          const tavilyData = await tavilyRes.json();
+
+          // 🟢 Check if Tavily actually found results
+          if (tavilyData.results && tavilyData.results.length > 0) {
+            const topSnippets = tavilyData.results.map(r => r.content).join(" | ");
+            liveWebContext = `\n- Live Internet Search Context: ${topSnippets}`;
+            console.log(`✅ Tavily Web search success using Key #${i + 1}! Fresh data fetched.`);
+            break; // Valid result milte hi search loop exit
+          } else {
+            console.log(`⚠️ Tavily Web search returned empty results.`);
+            break; 
+          }
+        } catch (searchErr) {
+          console.warn(`❌ Tavily Web search failed on Key #${i + 1}:`, searchErr.message);
         }
-      } catch (searchErr) {
-        console.warn(`❌ Tavily Web search failed:`, searchErr.message);
       }
     } else {
-        console.warn(`⚠️ TAVILY_API_KEY not found in env variables!`);
+      console.warn(`⚠️ No TAVILY_API_KEY found in environment variables!`);
     }
 
     const systemPrompt = `You are 'NestFinder AI', an enthusiastic, super friendly, and highly intelligent AI assistant.
@@ -114,6 +139,7 @@ STRICT FORMATTING & EMOJI RULES:
 
     let replyText = "";
 
+    // ⚡ Groq API Call Loop
     for (let i = 0; i < API_KEYS.length; i++) {
       const currentKey = API_KEYS[i];
       console.log(`⚡ Trying Account Key #${i + 1} with ${MODEL_NAME}...`);
@@ -159,7 +185,7 @@ STRICT FORMATTING & EMOJI RULES:
 
 const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => console.log(`🚀 Live AI Server (With Tavily Search) running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`🚀 Live AI Server (With Tavily Multi-Key Search) running on http://localhost:${PORT}`));
 }
 
 export default app;
